@@ -139,18 +139,35 @@ module.exports = function(app, swig, gestorBD) {
         }
 
 
-        gestorBD.obtenerCanciones( criterio,function(canciones) {
+        let pg = parseInt(req.query.pg); // Es String !!!
+        if ( req.query.pg == null){ // Puede no venir el param
+            pg = 1;
+        }
+        gestorBD.obtenerCancionesPg(criterio, pg , function(canciones, total ) {
             if (canciones == null) {
                 res.send("Error al listar ");
             } else {
+                let ultimaPg = total/4;
+                if (total % 4 > 0 ){ // Sobran decimales
+                    ultimaPg = ultimaPg+1;
+                }
+                let paginas = []; // paginas mostrar
+                for(let i = pg-2 ; i <= pg+2 ; i++){
+                    if ( i > 0 && i <= ultimaPg){
+                        paginas.push(i);
+                    }
+                }
                 let respuesta = swig.renderFile('views/btienda.html',
                     {
-                        canciones : canciones
+                        canciones : canciones,
+                        paginas : paginas,
+                        actual : pg
                     });
                 res.send(respuesta);
             }
         });
     });
+
 
     app.get('/cancion/:id', function (req, res) {
         let criterio = { "_id" :  gestorBD.mongo.ObjectID(req.params.id) };
