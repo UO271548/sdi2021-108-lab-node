@@ -18,7 +18,10 @@ module.exports = function(app, swig, gestorBD) {
                     }
                 });
             }else{
-                res.send("El usuario es el autor o ya ha comprado la cancion");
+                //res.send("El usuario es el autor o ya ha comprado la cancion");
+                req.session.errores = {mensaje:"El usuario es el autor o ya ha comprado la cancion",tipoMensaje:"alert-danger"};
+
+                res.redirect("/errors");
             }
         })
 
@@ -312,7 +315,14 @@ module.exports = function(app, swig, gestorBD) {
     };
 
 
-
+    app.get("/errors", function(req, res) {
+        let respuesta = swig.renderFile('views/error.html',
+            {
+                mensaje : req.session.errores.mensaje,
+                tipoMensaje : req.session.errores.tipoMensaje
+            });
+        res.send(respuesta);
+    });
 
     app.get('/promo*', function (req, res) {
         res.send('Respuesta patrón promo* ');

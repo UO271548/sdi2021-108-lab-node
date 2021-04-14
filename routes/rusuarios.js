@@ -42,9 +42,13 @@ module.exports = function(app, swig, gestorBD) {
         gestorBD.obtenerUsuarios(criterio, function(usuarios) {
             if (usuarios == null || usuarios.length == 0) {
                 req.session.usuario = null;
-                res.redirect("/identificarse" +
-                    "?mensaje=Email o password incorrecto"+
-                    "&tipoMensaje=alert-danger ");
+                //res.redirect("/identificarse" +"?mensaje=Email o password incorrecto"+"&tipoMensaje=alert-danger ");
+
+                req.session.errores = {mensaje:"Email o password incorrecto",tipoMensaje:"alert-danger"};
+
+                res.redirect("/errors");
+
+
 
             } else {
                 req.session.usuario = usuarios[0].email;
@@ -53,10 +57,20 @@ module.exports = function(app, swig, gestorBD) {
         });
     });
 
+    app.get("/errors", function(req, res) {
+        let respuesta = swig.renderFile('views/error.html',
+            {
+                mensaje : req.session.errores.mensaje,
+                tipoMensaje : req.session.errores.tipoMensaje
+            });
+        res.send(respuesta);
+    });
+
     app.get('/desconectarse', function (req, res) {
         req.session.usuario = null;
         res.send("Usuario desconectado");
     })
+
 
 
 
