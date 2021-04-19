@@ -19,6 +19,7 @@ module.exports = function(app, swig, gestorBD) {
                 });
             }else{
                 //res.send("El usuario es el autor o ya ha comprado la cancion");
+                //Complementario 2
                 req.session.errores = {mensaje:"El usuario es el autor o ya ha comprado la cancion",tipoMensaje:"alert-danger"};
 
                 res.redirect("/errors");
