@@ -7,7 +7,7 @@
         <thead>
         <tr>
             <th><a onclick="ordenarPorNombre()">Nombre</a></th>
-            <th>Genero</th>
+            <th><a onclick="ordenarPorGenero()">Genero</a></th>
             <th><a onclick="ordenarPorPrecio()">Precio</a></th>
             <th>Precio</th>
             <th class="col-md-1"></th>
@@ -124,6 +124,7 @@
         precioDsc = !precioDsc; //invertir
     }
 
+    //Orden por nomnbre realizado en el guion
     var nombreDsc = true;
     function ordenarPorNombre(){
         if (nombreDsc) {
@@ -143,5 +144,23 @@
         nombreDsc = !nombreDsc; //invertir
     }
 
+    var generoDsc = true;
+    function ordenarPorGenero(){
+        if (generoDsc) {
+            canciones.sort(function (a, b) {
+                if (a.genero > b.genero) return 1;
+                if (a.genero < b.genero) return -1;
+                return 0;
+            });
+        }else{
+            canciones.sort(function (a, b) {
+                if (a.genero > b.genero) return -1;
+                if (a.genero < b.genero) return 1;
+                return 0;
+            });
+        }
+        actualizarTabla(canciones);
+        generoDsc = !generoDsc; //invertir
+    }
 
 </script>
